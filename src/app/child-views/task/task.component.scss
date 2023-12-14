@@ -1,0 +1,26 @@
+
+.container {
+    display: grid;
+}
+
+.task {
+    display: grid;
+    grid-template-rows: 20px, auto, auto;
+    padding: 1rem;
+    gap: 1rem;
+    background-color: #FFF;
+    border-radius: 0.2rem;
+    border: 0.5px solid var(--support-dark-grey, #666);
+    filter: drop-shadow(-2px 3px 1px #a09f9f);
+    &-priority {
+        height: 30px;
+    }
+    &-description {
+        font-weight: lighter;
+        color: #757575;
+    }
+}
+
+.delete-button {
+    margin: 0.2rem;
+}

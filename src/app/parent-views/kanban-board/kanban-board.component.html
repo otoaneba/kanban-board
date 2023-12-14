@@ -1,0 +1,84 @@
+<body>
+    <main>
+        <div class="grid-even-columns">
+            <div cdkDrag class="column">
+                <div class="column-header">To Do</div>
+                <div cdkDropList #todoList="cdkDropList" id="TODO" [cdkDropListData]="todoTasks" [cdkDropListConnectedTo]="[implementingList, doneList]" (cdkDropListDropped)="onDrop($event)">
+                    <ng-container *ngIf="todoTasks && todoTasks.length > 0; else noTask">
+                        <ng-container *ngFor="let task of todoTasks">
+                            <app-task cdkDrag [cdkDragData]="task" class="task" [task]=task (deletedTask)="onDeleteTask($event)"></app-task>
+                        </ng-container>
+                    </ng-container>
+                </div>
+                <div class="button-container">
+                    <button mat-raised-button color="primary" data-toggle="modal" data-target="#exampleModal" >
+                        <mat-icon class="">add_circle_outline</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="column">
+                <div class="column-header">Implementing</div>
+                    <div cdkDropList #implementingList="cdkDropList" id="IMPLEMENTING" [cdkDropListData]="implementingTasks" [cdkDropListConnectedTo]="[todoList, doneList]" (cdkDropListDropped)="onDrop($event)">
+                        <ng-container *ngIf="implementingTasks && implementingTasks.length > 0; else noTask">
+                            <ng-container *ngFor="let task of implementingTasks">
+                                <app-task cdkDrag [cdkDragData]="task" class="task" [task]=task (deletedTask)="onDeleteTask($event)"></app-task>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+            </div>
+            <div class="column">
+                <div class="column-header">Done</div>
+                    <div cdkDropList #doneList="cdkDropList" id="DONE" [cdkDropListData]="doneTasks" [cdkDropListConnectedTo]="[todoList, implementingList]" (cdkDropListDropped)="onDrop($event)">
+                        <ng-container *ngIf="doneTasks && doneTasks.length > 0; else noTask">
+                            <ng-container *ngFor="let task of doneTasks">
+                                <app-task cdkDrag [cdkDragData]="task" class="task" [task]=task (deletedTask)="onDeleteTask($event)"></app-task>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+            </div>
+            <ng-template #noTask>
+                <app-task class="task" [empty]=true></app-task>
+            </ng-template>
+        </div>
+    </main>
+</body>
+<!-- START TASK FORM -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Add New Task</h5>
+        </div>
+        <div class="modal-body">
+            <form (ngSubmit)="onSubmit()" #taskForm="ngForm" id="closeModal">
+                <div class="form-group">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">Description</div>
+                            <div class="col d-flex justify-content-end">{{task.description.length}}/25</div>
+                        </div>
+                    </div>
+                  <input 
+                        type="text"
+                        class="form-control"
+                        id="description"
+                        required
+                        [(ngModel)]="task.description"
+                        name="description"
+                        #description="ngModel"
+                        minlength="25">
+                  <div [hidden]="description.valid || description.pristine"
+                       class="alert alert-warning">
+                    Description should be at least 25 characters
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-success" [disabled]="!taskForm.form.valid">Submit</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button #closeModal type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- END TASK FORM -->

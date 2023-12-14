@@ -1,0 +1,36 @@
+.grid-even-columns {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    padding-top: 0.5rem;
+}
+
+.column {
+    border-style: ridge;
+    background: var(--support-white-grey, #F9F9F9);
+    align-items: start;
+    padding: 1rem;
+    &-header {
+        text-align: center;
+        padding-top: 0.5rem;
+    }
+    &-dropList {
+        text-align: center;
+        padding: 2rem;
+    }
+}
+
+.task {
+    padding: 0.5rem;
+}
+
+.button-container {
+    display: grid;
+}
+
+// Revisit if possible. Only works with bootstrap grid. CSS grid with grid-template-columns creates rows intead.
+.input-description-column {
+    display: grid;
+    grid-template-columns: 1fr, 1fr !important;
+    grid-template-rows: 1fr !important;
+}
