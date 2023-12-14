@@ -18,20 +18,23 @@ export class KanbanBoardService {
 
   /**
    * @description - Adds a task into one of the columns: todo, implementing, or done.
-   * @param {Task} task 
+   * @param {Task} task - The task to be added into the toDo array.
    */
   public addTask(task: Task): void {
     if (!this.toDo) {
       this.toDo = []
     }
-    let dateHash = Date.now().toString(36);
     this.toDo.push(task);
   }
 
   /**
-   * 
+   * @description - Function deletes the task with the given ID from a given STATUS.
+   * @param {string} id - The id of the task to be deleted.
+   * @param {Status} from - The Status of the task, which gives us which array the task is in.
+   * @returns {void}
    */
   public deleteTask(id: string, from: Status): void {
+    // Can use Map to improve performance
     if (from === 'TODO' && this.toDo) {
       for (let i = 0; i < this.toDo.length; i++) {
         if (this.toDo[i]?.id === id) {
@@ -53,13 +56,17 @@ export class KanbanBoardService {
     }
   }
 
+  /**
+   * @description - Function (called from KanbanBoardComponent) to tranfer or reorder the task by dragging the selected task. @see KanbanBoardComponent and its onDrop() to see more details.
+   * @param {CdkDragDrop<Task[]>} event - An event containing the cdkDragItem, and the origin and destination cdkDropList.
+   */
   public drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
-      console.log('event from move within: ', event)
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      console.log('event from transfer: ', event)
-      // update the status of the dragged task (e.g. 'TODO' -> 'IMPLEMENTING')
+      /**
+       * update the status of the dragged task (e.g. 'TODO' -> 'IMPLEMENTING')
+       */
       event.item.data.status = event.container.id;
       transferArrayItem(event.previousContainer.data,
         event.container.data,

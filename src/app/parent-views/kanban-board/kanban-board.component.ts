@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {   CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag, CdkDropList, } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { KanbanBoardService } from 'src/app/services/kanban-board.service';
 import { Task } from 'src/app/models/task.model';
@@ -26,7 +26,8 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   /**
-   * 
+   * @description - Function to run when this component initializes to retrieve all tasks.
+   * @returns {void}
    */
   private retrieveTasks(): void {
     this.todoTasks = this.kanbanBoardService.getToDoTasks();
@@ -36,6 +37,7 @@ export class KanbanBoardComponent implements OnInit {
 
   /**
    * @description - Submits the form with a new task.
+   * @returns {void}
    */
   public onSubmit(): void {
     this.kanbanBoardService.addTask(this.task);
@@ -45,14 +47,20 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   /**
-   * 
+   * @description - Deletes the task with the given id. The task to be deleted is emitted from TaskComponent. @see TaskComponent for more details.
+   * @param {Task} task - The task to be deleted.
+   * @returns {void}
    */
-  public onDeleteTask(id: Task) {
-    console.log('deleting from kanban board')
-    this.kanbanBoardService.deleteTask(id.id, id.status)
+  public onDeleteTask(task: Task): void {
+    this.kanbanBoardService.deleteTask(task.id, task.status)
   }
 
-  public onDrop(event: CdkDragDrop<Task[]>) {
+  /**
+   * @description - Function to run when a cdkDragItem is dropped into a cdkDropList.
+   * @param {CdkDragDrop<Task[]>} event - An event containing the cdkDragItem, and the origin and destination cdkDropList.
+   * @returns {void}
+   */
+  public onDrop(event: CdkDragDrop<Task[]>): void {
     this.kanbanBoardService.drop(event);
   }
 }
