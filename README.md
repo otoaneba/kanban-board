@@ -2,6 +2,12 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.7.
 
+## Demo
+
+The live demo can be run at [github pages](https://otoaneba.github.io/kanban-board/). The initial page should look like this. If the first time you visit the page does not look like the example below, please try and clear cacsche and reload the page or run the link in incognito mode.
+
+[example](src/assets/example.png)
+
 ## Prerequisite
 
 Run `npm i` in order to install all the necessary packages if you are running this project locally.
