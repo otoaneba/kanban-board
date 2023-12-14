@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Event } from '@angular/router';
 
 import { Task } from 'src/app/models/task.model';
 
@@ -12,15 +11,17 @@ export class TaskComponent {
 
   @Input() public task: Task;
   @Input() public empty: boolean;
-  @Output() public id: EventEmitter<string> = new EventEmitter<string>();
   @Output() public deletedTask: EventEmitter<Task> = new EventEmitter<Task>();
 
   constructor() {}
 
+  /**
+   * @description - Emit the task to be deleted to the parent component.
+   * @param {Task} task - Task to be deleted. 
+   * @param {string} id - ID of the task, if needed.
+   * @returns {void} 
+   */
   public onDelete(task: Task, id: string): void {
-    console.log("event: ", task, id);
-    // this.id.emit(task.id);
     this.deletedTask.emit(task);
   }
-
 }
