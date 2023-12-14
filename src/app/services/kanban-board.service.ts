@@ -10,21 +10,44 @@ import { Priority } from '../models/task.model';
 })
 export class KanbanBoardService {
 
-  private toDo: Task[] = [new Task(Status.Todo , "New kanban board feature. Best kanban board better than Evernote.", Priority.Low, Date.now().toString())]
-  private implementing: Task[] = [new Task(Status.Implementing , "New kanban board implementing feature", Priority.Low, (Date.now()+1).toString())];
-  private done: Task[] = [new Task(Status.Done , "New kanban board done feature", Priority.Low, (Date.now()+2).toString())];
+  private toDo: Task[] = [];
+  private implementing: Task[] = [];
+  private done: Task[] = [];
 
   constructor() { }
+
+  /**
+   * @description - Function to check local storage (or cacshe) and populates the different task array accordingly.
+   * @returns {void}
+   */
+  public checkCasche(): void {
+    let keys = Object.keys(localStorage);
+    if (keys) {
+      for (let i = 0; i < keys.length; i++) {
+        let temp = localStorage.getItem(keys[i]);
+        if (temp) {
+          let task = JSON.parse(temp);
+          this.addTask(task);
+        }
+      }
+    }
+  }
+
+
 
   /**
    * @description - Adds a task into one of the columns: todo, implementing, or done.
    * @param {Task} task - The task to be added into the toDo array.
    */
   public addTask(task: Task): void {
-    if (!this.toDo) {
-      this.toDo = []
+    if (task && task.status === 'TODO') {
+      this.toDo.push(task);
+    } else if (task && task.status === 'IMPLEMENTING') {
+      this.implementing.push(task);
+    } else {
+      this.done.push(task);
     }
-    this.toDo.push(task);
+    localStorage.setItem(task.id, JSON.stringify(task))
   }
 
   /**
@@ -54,6 +77,7 @@ export class KanbanBoardService {
         }
       }
     }
+    localStorage.removeItem(id);
   }
 
   /**
@@ -65,13 +89,28 @@ export class KanbanBoardService {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       /**
-       * update the status of the dragged task (e.g. 'TODO' -> 'IMPLEMENTING')
+       * update the status of the dragged task (e.g. 'TODO' -> 'IMPLEMENTING').
+       * Tag of "id" is used to track the status of the selected task, hence setting the container.id to the task. 
        */
       event.item.data.status = event.container.id;
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex);
+        this.updateLocalStorage(event.item.data, event.item.data.id, event.container.id)
+    }
+  }
+
+  /**
+   * @description - Updates the tasks in the local storage.
+   * @param {string} id - The id of the task.
+   * @returns {void} 
+   */
+  private updateLocalStorage(task: Task, id: string, newStatus: string): void {
+    let cacshedTask = localStorage.getItem(id);
+    if (cacshedTask) {
+      let newTask = new Task(newStatus === 'TODO' ? Status.Todo : newStatus === 'IMPLEMENTING' ? Status.Implementing : Status.Done, task.description, task.priority, id);
+      localStorage.setItem(id, JSON.stringify(newTask));
     }
   }
 
@@ -83,19 +122,19 @@ export class KanbanBoardService {
     return this.toDo;
   }
 
-   /**
+  /**
    * @description - Getter for toDo array.
    * @returns {[Task]} Array containing current To Do tasks.
    */
-   public getImplementingTasks(): Task[] {
+  public getImplementingTasks(): Task[] {
     return this.implementing;
   }
 
-   /**
+  /**
    * @description - Getter for toDo array.
    * @returns {[Task]} Array containing current To Do tasks.
    */
-   public getDoneTasks(): Task[] {
+  public getDoneTasks(): Task[] {
     return this.done;
   }
 }

@@ -22,6 +22,7 @@ export class KanbanBoardComponent implements OnInit {
   constructor(private kanbanBoardService: KanbanBoardService) {}
 
   ngOnInit() {
+    this.kanbanBoardService.checkCasche();
     this.retrieveTasks();
   }
 
@@ -33,6 +34,13 @@ export class KanbanBoardComponent implements OnInit {
     this.todoTasks = this.kanbanBoardService.getToDoTasks();
     this.implementingTasks = this.kanbanBoardService.getImplementingTasks();
     this.doneTasks = this.kanbanBoardService.getDoneTasks();
+    /**
+     * This code below may be deleted as desired. It is only used so the user does not start with an empty board.
+     */
+    let localStorageSize = localStorage.length
+    if (!localStorageSize) {
+      this.kanbanBoardService.addTask(new Task(Status.Todo , "New kanban board feature. Best kanban board better than Evernote.", Priority.Low, Date.now().toString()));
+    }
   }
 
   /**
