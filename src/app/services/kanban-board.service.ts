@@ -47,7 +47,11 @@ export class KanbanBoardService {
     } else {
       this.done.push(task);
     }
-    localStorage.setItem(task.id, JSON.stringify(task))
+    try {
+      localStorage.setItem(task.id, JSON.stringify(task))
+    } catch (e) {
+      alert("error parsing JSON")
+    }
   }
 
   /**
