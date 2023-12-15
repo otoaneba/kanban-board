@@ -8,6 +8,8 @@ The live demo can be run at [github pages](https://otoaneba.github.io/kanban-boa
 
 ![example](src/assets/example.png)
 
+https://github.com/otoaneba/kanban-board/assets/14825749/e99c86f6-0d78-495a-a84c-41ce7a72dd4c
+
 ## Prerequisite
 
 Run `npm i` in order to install all the necessary packages if you are running this project locally.
