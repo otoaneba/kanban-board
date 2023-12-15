@@ -21,15 +21,19 @@ export class KanbanBoardService {
    * @returns {void}
    */
   public checkCasche(): void {
-    let keys = Object.keys(localStorage);
-    if (keys) {
-      for (let i = 0; i < keys.length; i++) {
-        let temp = localStorage.getItem(keys[i]);
-        if (temp) {
-          let task = JSON.parse(temp);
-          this.addTask(task);
+    try {
+      let keys = Object.keys(localStorage);
+      if (keys) {
+        for (let i = 0; i < keys.length; i++) {
+          let temp = localStorage.getItem(keys[i]);
+          if (temp) {
+            let task = JSON.parse(temp);
+            this.addTask(task);
+          }
         }
       }
+    } catch (e) {
+      alert("Error parsing JSON. Try clearing cacshe or running in incognito mode. error: \n" + e);
     }
   }
 
