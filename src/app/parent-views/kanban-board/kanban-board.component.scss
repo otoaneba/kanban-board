@@ -5,32 +5,54 @@
     padding-top: 0.5rem;
 }
 
+.button-container {
+    display: grid;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
 .column {
-    border-style: ridge;
     background: var(--support-white-grey, #F9F9F9);
-    align-items: start;
     padding: 1rem;
     &-header {
         text-align: center;
         padding-top: 0.5rem;
-    }
-    &-dropList {
-        text-align: center;
-        padding: 2rem;
+        padding-bottom: 0.5rem;
     }
 }
 
+.empty {
+    text-align: center;
+    padding-top: 10rem;
+}
+
+.drop-list {
+    border: solid 1px #ccc;
+    min-height: 60px;
+    background: var(--support-white-grey, #F9F9F9);
+    border-radius: 4px;
+    overflow: hidden;
+    display: block;
+}
 .task {
-    padding: 0.5rem;
+    padding: 1rem;
 }
 
-.button-container {
-    display: grid;
+.task:last-child {
+    border: none;
+    flex-direction: row;
+    cursor: move;
 }
 
-// Revisit if possible. Only works with bootstrap grid. CSS grid with grid-template-columns creates rows intead.
-.input-description-column {
-    display: grid;
-    grid-template-columns: 1fr, 1fr !important;
-    grid-template-rows: 1fr !important;
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.task-list.cdk-drop-list-dragging .task:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }

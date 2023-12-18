@@ -18,10 +18,9 @@ export class TaskComponent {
   /**
    * @description - Emit the task to be deleted to the parent component.
    * @param {Task} task - Task to be deleted. 
-   * @param {string} id - ID of the task, if needed.
    * @returns {void} 
    */
-  public onDelete(task: Task, id: string): void {
+  public onDelete(task: Task): void {
     this.deletedTask.emit(task);
   }
 }

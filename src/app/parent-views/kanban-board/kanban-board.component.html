@@ -1,43 +1,52 @@
 <body>
     <main>
         <div class="grid-even-columns">
-            <div cdkDrag class="column">
-                <div class="column-header">To Do</div>
-                <div cdkDropList #todoList="cdkDropList" id="TODO" [cdkDropListData]="todoTasks" [cdkDropListConnectedTo]="[implementingList, doneList]" (cdkDropListDropped)="onDrop($event)">
-                    <ng-container *ngIf="todoTasks && todoTasks.length > 0; else noTask">
-                        <ng-container *ngFor="let task of todoTasks">
-                            <app-task cdkDrag [cdkDragData]="task" class="task" [task]=task (deletedTask)="onDeleteTask($event)"></app-task>
+                <div cdkDropList class="column drop-list" #todoList="cdkDropList" id="TODO" [cdkDropListData]="todoTasks" [cdkDropListConnectedTo]="[implementingList, doneList]" (cdkDropListDropped)="onDrop($event)">
+                    <div class="column">
+                        <div class="column-header">To Do</div>
+                        <ng-container *ngIf="todoTasks && todoTasks.length > 0">
+                            <ng-container *ngFor="let task of todoTasks">
+                                <app-task cdkDrag [cdkDragData]="task" class="task" [task]=task (deletedTask)="onDeleteTask($event)"></app-task>
+                            </ng-container>
                         </ng-container>
-                    </ng-container>
+                    </div>
+                    <div class="button-container">
+                        <button mat-raised-button color="primary" data-toggle="modal" data-target="#exampleModal" >
+                            ADD TASK<mat-icon class="">add_circle_outline</mat-icon>
+                        </button>
+                    </div>
                 </div>
-                <div class="button-container">
-                    <button mat-raised-button color="primary" data-toggle="modal" data-target="#exampleModal" >
-                        <mat-icon class="">add_circle_outline</mat-icon>
-                    </button>
-                </div>
-            </div>
-            <div class="column">
-                <div class="column-header">Implementing</div>
-                    <div cdkDropList #implementingList="cdkDropList" id="IMPLEMENTING" [cdkDropListData]="implementingTasks" [cdkDropListConnectedTo]="[todoList, doneList]" (cdkDropListDropped)="onDrop($event)">
-                        <ng-container *ngIf="implementingTasks && implementingTasks.length > 0; else noTask">
+
+                <div cdkDropList class="column drop-list"  #implementingList="cdkDropList" id="IMPLEMENTING" [cdkDropListData]="implementingTasks" [cdkDropListConnectedTo]="[todoList, doneList]" (cdkDropListDropped)="onDrop($event)">
+                    <div class="column">
+                        <div class="column-header">Implementing</div>
+                        <ng-container *ngIf="implementingTasks && implementingTasks.length > 0">
                             <ng-container *ngFor="let task of implementingTasks">
                                 <app-task cdkDrag [cdkDragData]="task" class="task" [task]=task (deletedTask)="onDeleteTask($event)"></app-task>
                             </ng-container>
                         </ng-container>
                     </div>
-            </div>
-            <div class="column">
-                <div class="column-header">Done</div>
-                    <div cdkDropList #doneList="cdkDropList" id="DONE" [cdkDropListData]="doneTasks" [cdkDropListConnectedTo]="[todoList, implementingList]" (cdkDropListDropped)="onDrop($event)">
-                        <ng-container *ngIf="doneTasks && doneTasks.length > 0; else noTask">
-                            <ng-container *ngFor="let task of doneTasks">
-                                <app-task cdkDrag [cdkDragData]="task" class="task" [task]=task (deletedTask)="onDeleteTask($event)"></app-task>
+                </div>
+            <!-- <div class="column"> -->
+                <!-- <div class="column-header">Done</div> -->
+                    <div cdkDropList class="column drop-list" #doneList="cdkDropList" id="DONE" [cdkDropListData]="doneTasks" [cdkDropListConnectedTo]="[todoList, implementingList]" (cdkDropListDropped)="onDrop($event)">
+                        <div class="column">
+                            <div class="column-header">Done</div>
+                            <ng-container *ngIf="doneTasks && doneTasks.length > 0">
+                                <ng-container *ngFor="let task of doneTasks">
+                                    <app-task cdkDrag [cdkDragData]="task" class="task" [task]=task (deletedTask)="onDeleteTask($event)"></app-task>
+                                </ng-container>
                             </ng-container>
-                        </ng-container>
+                        </div>
                     </div>
-            </div>
+            <!-- </div> -->
             <ng-template #noTask>
                 <app-task class="task" [empty]=true></app-task>
+            </ng-template>
+            <ng-template #empty>
+                <div cdkDrag class="empty">
+                    <p>Drop tasks here to add.</p>
+                </div>
             </ng-template>
         </div>
     </main>
@@ -55,7 +64,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col">Description</div>
-                            <div class="col d-flex justify-content-end">{{task.description.length}}/25</div>
+                            <div class="col d-flex justify-content-end">{{task.description.length}}/4</div>
                         </div>
                     </div>
                   <input 
@@ -66,11 +75,25 @@
                         [(ngModel)]="task.description"
                         name="description"
                         #description="ngModel"
-                        minlength="25">
+                        minlength="4">
                   <div [hidden]="description.valid || description.pristine"
                        class="alert alert-warning">
-                    Description should be at least 25 characters
+                    Description should be at least 4 characters
                   </div>
+                  <div class="container">
+                    <div class="row">
+                        <div class="col">Priority</div>
+                    </div>
+                </div>
+                  <select 
+                    class="form-control" 
+                    id="priority" 
+                    required
+                    [(ngModel)]="task.priority"
+                    name="priority"
+                    #priority="ngModel">
+                    <option *ngFor="let x of priorities" [value]="x">{{x}}</option>
+                  </select>
                 </div>
                 <button type="submit" class="btn btn-success" [disabled]="!taskForm.form.valid">Submit</button>
             </form>

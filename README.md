@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Demo
 
-The live demo can be run at [github pages](https://otoaneba.github.io/kanban-board/). If the repository is set to private, this link will <b>not work</b>. The initial page should look like this. If the first time you visit the page does not look like the example below, please try and clear cacsche and reload the page or run the link in incognito mode.
+The live demo can be run at [github pages](https://otoaneba.github.io/kanban-board/). The initial page should look like this. If the first time you visit the page does not look like the example below, please try and clear cache and reload the page or run the link in incognito mode.
 
 https://github.com/otoaneba/kanban-board/assets/14825749/e99c86f6-0d78-495a-a84c-41ce7a72dd4c
 
@@ -22,4 +22,4 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Trouble shooting
 
-If in any case the code does not run on the live demo link, please try clearing any cacshe and run again.
+If in any case the code does not run on the live demo link, please try clearing any cache and run again.

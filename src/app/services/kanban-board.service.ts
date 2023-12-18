@@ -3,37 +3,50 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 
 import { Task } from '../models/task.model';
 import { Status } from '../models/task.model';
-import { Priority } from '../models/task.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KanbanBoardService {
 
+  // front end arrays 
   private toDo: Task[] = [];
   private implementing: Task[] = [];
   private done: Task[] = [];
 
+  // cached data array
+  private localStorageKey: string = "kanban-board-tasks";
+  private localStorageTasksArray: Task[] = [];
+
   constructor() { }
 
   /**
-   * @description - Function to check local storage (or cacshe) and populates the different task array accordingly.
+   * @description - Function to check local storage (or cache) and populates the different task array accordingly.
    * @returns {void}
    */
-  public checkCasche(): void {
+  public checkCache(): void {
     try {
-      let keys = Object.keys(localStorage);
-      if (keys) {
-        for (let i = 0; i < keys.length; i++) {
-          let temp = localStorage.getItem(keys[i]);
-          if (temp) {
-            let task = JSON.parse(temp);
-            this.addTask(task);
-          }
+      this.toDo = [];
+      this.implementing = [];
+      this.done = [];
+      let cachedTask = localStorage.getItem(this.localStorageKey);
+      if (cachedTask) {
+        let parsedTasks = JSON.parse(cachedTask);
+        if (parsedTasks) {
+          this.localStorageTasksArray =  parsedTasks;
+          parsedTasks.filter((task: Task) => {
+            if (task && task.status === "TODO") {
+              this.toDo.push(task);
+            } else if (task && task.status === "IMPLEMENTING") {
+              this.implementing.push(task);
+            } else {
+              this.done.push(task);
+            }
+          })
         }
       }
     } catch (e) {
-      alert("Error parsing JSON. Try clearing cacshe or running in incognito mode. error: \n" + e);
+      alert("Error parsing JSON. Try clearing cache or running in incognito mode. error: \n" + e);
     }
   }
 
@@ -52,9 +65,10 @@ export class KanbanBoardService {
       this.done.push(task);
     }
     try {
-      localStorage.setItem(task.id, JSON.stringify(task))
+      this.localStorageTasksArray.push(task);
+      localStorage.setItem(this.localStorageKey, JSON.stringify(this.localStorageTasksArray));
     } catch (e) {
-      alert("error parsing JSON")
+      alert("Error parsing JSON. Try clearing cache or running in incognito mode. error: \n" + e)
     }
   }
 
@@ -64,28 +78,18 @@ export class KanbanBoardService {
    * @param {Status} from - The Status of the task, which gives us which array the task is in.
    * @returns {void}
    */
-  public deleteTask(id: string, from: Status): void {
-    // Can use Map to improve performance
-    if (from === 'TODO' && this.toDo) {
-      for (let i = 0; i < this.toDo.length; i++) {
-        if (this.toDo[i]?.id === id) {
-          this.toDo.splice(i, 1);
+  public deleteTask(id: string): void {
+    try {
+      for (let i = 0; i < this.localStorageTasksArray.length; i++) {
+        if (this.localStorageTasksArray[i]?.id === id) {
+          this.localStorageTasksArray.splice(i, 1);
+          localStorage.setItem(this.localStorageKey, JSON.stringify(this.localStorageTasksArray));
         }
       }
-    } else if (from === 'IMPLEMENTING' && this.implementing) {
-      for (let i = 0; i < this.implementing.length; i++) {
-        if (this.implementing[i]?.id === id) {
-          this.implementing.splice(i, 1);
-        }
-      }
-    } else if (from === 'DONE' && this.done) {
-      for (let i = 0; i < this.done.length; i++) {
-        if (this.done[i]?.id === id) {
-          this.done.splice(i, 1);
-        }
-      }
+      this.checkCache();
+    } catch (e) {
+      alert("Error deleting JSON data. Try clearing cache or running in incognito mode. error: \n" + e)
     }
-    localStorage.removeItem(id);
   }
 
   /**
@@ -105,20 +109,19 @@ export class KanbanBoardService {
         event.container.data,
         event.previousIndex,
         event.currentIndex);
-        this.updateLocalStorage(event.item.data, event.item.data.id, event.container.id)
+        this.updateLocalStorage();
     }
   }
 
   /**
-   * @description - Updates the tasks in the local storage.
-   * @param {string} id - The id of the task.
-   * @returns {void} 
+   * @description - Updates the tasks in the local storage. Simply readd the updated array to override the array in local storage.
+   * @returns {void}
    */
-  private updateLocalStorage(task: Task, id: string, newStatus: string): void {
-    let cacshedTask = localStorage.getItem(id);
-    if (cacshedTask) {
-      let newTask = new Task(newStatus === 'TODO' ? Status.Todo : newStatus === 'IMPLEMENTING' ? Status.Implementing : Status.Done, task.description, task.priority, id);
-      localStorage.setItem(id, JSON.stringify(newTask));
+  private updateLocalStorage(): void {
+    try {
+        localStorage.setItem(this.localStorageKey, JSON.stringify(this.localStorageTasksArray));
+    } catch (e) {
+      alert("Error adding JSON data. Try clearing cache or running in incognito mode. error: \n" + e)
     }
   }
 

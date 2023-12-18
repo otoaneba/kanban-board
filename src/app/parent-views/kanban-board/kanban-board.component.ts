@@ -1,5 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop,  moveItemInArray,
+  transferArrayItem,
+  CdkDrag,
+  CdkDropList } from '@angular/cdk/drag-drop';
 
 import { KanbanBoardService } from 'src/app/services/kanban-board.service';
 import { Task } from 'src/app/models/task.model';
@@ -15,6 +18,7 @@ export class KanbanBoardComponent implements OnInit {
   
   @ViewChild('closeModal') closeModal: { nativeElement: { click: () => void; }; };
   public task: Task = new Task(Status.Todo , "", Priority.Low, Date.now().toString());
+  public priorities: Priority[] = [Priority.Low, Priority.Medium, Priority.High];
   public todoTasks: Task[];
   public implementingTasks: Task[];
   public doneTasks: Task[];
@@ -22,8 +26,9 @@ export class KanbanBoardComponent implements OnInit {
   constructor(private kanbanBoardService: KanbanBoardService) {}
 
   ngOnInit() {
-    this.kanbanBoardService.checkCasche();
+    this.kanbanBoardService.checkCache();
     this.retrieveTasks();
+    console.log('onInitcalled')
   }
 
   /**
@@ -49,9 +54,16 @@ export class KanbanBoardComponent implements OnInit {
    */
   public onSubmit(): void {
     this.kanbanBoardService.addTask(this.task);
+    // if (this.task.status === "TODO") {
+    //   this.todoTasks = this.kanbanBoardService.getToDoTasks();
+    // } else if (this.task.status === "IMPLEMENTING") {
+    //   this.implementingTasks = this.kanbanBoardService.getImplementingTasks();
+    // } else {
+    //   this.doneTasks = this.kanbanBoardService.getDoneTasks();
+    // }
+    this.updateTasks(this.task)
     this.closeModal.nativeElement.click();
     this.task = new Task(Status.Todo , "", Priority.Low, Date.now().toString());
-
   }
 
   /**
@@ -60,7 +72,25 @@ export class KanbanBoardComponent implements OnInit {
    * @returns {void}
    */
   public onDeleteTask(task: Task): void {
-    this.kanbanBoardService.deleteTask(task.id, task.status)
+    this.kanbanBoardService.deleteTask(task.id);
+    this.updateTasks(task);
+    // if (task.status === "TODO") {
+    //   this.todoTasks = this.kanbanBoardService.getToDoTasks();
+    // } else if (task.status === "IMPLEMENTING") {
+    //   this.implementingTasks = this.kanbanBoardService.getImplementingTasks();
+    // } else {
+    //   this.doneTasks = this.kanbanBoardService.getDoneTasks();
+    // }
+  }
+
+  private updateTasks(task: Task): void {
+    if (task.status === "TODO") {
+      this.todoTasks = this.kanbanBoardService.getToDoTasks();
+    } else if (task.status === "IMPLEMENTING") {
+      this.implementingTasks = this.kanbanBoardService.getImplementingTasks();
+    } else {
+      this.doneTasks = this.kanbanBoardService.getDoneTasks();
+    }
   }
 
   /**
