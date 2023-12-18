@@ -6,8 +6,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 The live demo can be run at [github pages](https://otoaneba.github.io/kanban-board/). If the repository is set to private, this link will <b>not work</b>. The initial page should look like this. If the first time you visit the page does not look like the example below, please try and clear cacsche and reload the page or run the link in incognito mode.
 
-![example](src/assets/example.png)
-
 https://github.com/otoaneba/kanban-board/assets/14825749/e99c86f6-0d78-495a-a84c-41ce7a72dd4c
 
 ## Prerequisite
