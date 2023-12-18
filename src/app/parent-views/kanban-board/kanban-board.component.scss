@@ -1,3 +1,18 @@
+.title {
+    padding-top: 1rem;
+    text-align: center;
+    font-weight: lighter;
+}
+
+.horizontal-line {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.body {
+    padding: 1rem;
+}
+
 .grid-even-columns {
     display: grid;
     gap: 1rem;

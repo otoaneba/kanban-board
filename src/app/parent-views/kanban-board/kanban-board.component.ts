@@ -28,7 +28,6 @@ export class KanbanBoardComponent implements OnInit {
   ngOnInit() {
     this.kanbanBoardService.checkCache();
     this.retrieveTasks();
-    console.log('onInitcalled')
   }
 
   /**

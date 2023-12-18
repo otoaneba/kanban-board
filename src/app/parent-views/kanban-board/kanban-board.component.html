@@ -1,4 +1,6 @@
-<body>
+<h1 class="title">Kanban Board</h1>
+<hr>
+<body class="body">
     <main>
         <div class="grid-even-columns">
                 <div cdkDropList class="column drop-list" #todoList="cdkDropList" id="TODO" [cdkDropListData]="todoTasks" [cdkDropListConnectedTo]="[implementingList, doneList]" (cdkDropListDropped)="onDrop($event)">
