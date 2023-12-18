@@ -44,6 +44,7 @@ export class KanbanBoardComponent implements OnInit {
     let localStorageSize = localStorage.length
     if (!localStorageSize) {
       this.kanbanBoardService.addTask(new Task(Status.Todo , "New kanban board feature. Best kanban board better than Evernote.", Priority.Low, Date.now().toString()));
+      this.todoTasks = this.kanbanBoardService.getToDoTasks();
     }
   }
 
@@ -53,13 +54,6 @@ export class KanbanBoardComponent implements OnInit {
    */
   public onSubmit(): void {
     this.kanbanBoardService.addTask(this.task);
-    // if (this.task.status === "TODO") {
-    //   this.todoTasks = this.kanbanBoardService.getToDoTasks();
-    // } else if (this.task.status === "IMPLEMENTING") {
-    //   this.implementingTasks = this.kanbanBoardService.getImplementingTasks();
-    // } else {
-    //   this.doneTasks = this.kanbanBoardService.getDoneTasks();
-    // }
     this.updateTasks(this.task)
     this.closeModal.nativeElement.click();
     this.task = new Task(Status.Todo , "", Priority.Low, Date.now().toString());
@@ -73,13 +67,6 @@ export class KanbanBoardComponent implements OnInit {
   public onDeleteTask(task: Task): void {
     this.kanbanBoardService.deleteTask(task.id);
     this.updateTasks(task);
-    // if (task.status === "TODO") {
-    //   this.todoTasks = this.kanbanBoardService.getToDoTasks();
-    // } else if (task.status === "IMPLEMENTING") {
-    //   this.implementingTasks = this.kanbanBoardService.getImplementingTasks();
-    // } else {
-    //   this.doneTasks = this.kanbanBoardService.getDoneTasks();
-    // }
   }
 
   private updateTasks(task: Task): void {
